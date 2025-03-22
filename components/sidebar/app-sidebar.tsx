@@ -17,18 +17,24 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, PlusCircle, Upload, Folder, FolderOpen } from "lucide-react";
-
-// On utilise Collapsible seulement pour organiser les "dossiers" d'endpoints,
-// pas pour réduire toute la sidebar.
+import {
+  ChevronDown,
+  ChevronRight,
+  PlusCircle,
+  Upload,
+  Folder,
+  FolderOpen,
+} from "lucide-react";
 import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
 
-// Exemples d'endpoints (données mock)
-const folders = [
+// ---
+// On définit ici des données initiales pour les dossiers et leurs endpoints.
+// Dans une application réelle, ces données pourront être récupérées depuis une API.
+const initialFolders = [
   {
     name: "Swagger Store",
     endpoints: [
@@ -45,16 +51,17 @@ const folders = [
   },
 ];
 
+// ---
+// Composant principal de la Sidebar
 export function AppSidebar() {
+  // On utilise useState pour gérer dynamiquement la liste des dossiers
+  const [folders, setFolders] = React.useState(initialFolders);
+
   return (
-    // Retirer la prop collapsible="icon" pour désactiver la réduction
     <Sidebar>
       {/* HEADER DE LA SIDEBAR */}
       <SidebarHeader className="flex flex-col gap-4 p-4">
-        {/* 1) Menu utilisateur */}
         <UserAccountMenu />
-
-        {/* 2) Boutons "New" et "Import" */}
         <div className="flex gap-2">
           <Button variant="secondary" className="flex-1">
             <PlusCircle className="mr-2 h-4 w-4" />
@@ -65,55 +72,59 @@ export function AppSidebar() {
             Import
           </Button>
         </div>
-
-        {/* 3) Champ de recherche */}
         <Input type="text" placeholder="Search..." />
       </SidebarHeader>
 
-      {/* CONTENU DE LA SIDEBAR (LISTE DES ENDPOINTS) */}
-      <SidebarContent className="space-y-2 p-2">
-        {folders.map((folder) => (
-          /* CHANGEMENT 1: Ajout de la classe "group" pour activer l'animation sur le chevron */
-          <Collapsible key={folder.name} defaultOpen className="group">
-            {/* Titre du dossier */}
-            <CollapsibleTrigger asChild>
-              {/* CHANGEMENT 2: Ajout de l'emoji 📁 et classes pour animer le chevron */}
-              <div className="flex items-center cursor-pointer px-2 py-2 font-semibold hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md">
-                <span className="mr-2">
-                  <Folder className="h-4 w-4 group-data-[state=closed]:block hidden" />
-                  <FolderOpen className="h-4 w-4 group-data-[state=open]:block hidden" />
-                </span>
-                <span className="flex-1">{folder.name}</span>
-                <ChevronRight
-                  className="inline-block ml-1 h-4 w-4 align-middle transition-transform group-data-[state=open]:rotate-90"
-                />
-              </div>
-            </CollapsibleTrigger>
-
-            {/* Liste des endpoints du dossier */}
-            <CollapsibleContent className="ml-4 border-l pl-2 space-y-1">
-              <SidebarMenu>
-                {folder.endpoints.map((endpoint) => (
-                  <SidebarMenuItem key={endpoint.title}>
-                    <SidebarMenuButton asChild>
-                      <button className="flex items-center gap-2 text-sm">
-                        {/* Badges de méthode (GET, POST, etc.) */}
-                        <MethodBadge method={endpoint.method} />
-                        <span>{endpoint.title}</span>
-                      </button>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </CollapsibleContent>
-          </Collapsible>
-        ))}
-      </SidebarContent>
+      {/* CONTENU DE LA SIDEBAR : affichage de la liste des dossiers et endpoints */}
+      <FolderList folders={folders} />
     </Sidebar>
   );
 }
 
-/* Composant simple pour le menu utilisateur (avatar + dropdown) */
+// ---
+// Composant FolderList : extrait le rendu de la liste des dossiers
+function FolderList({ folders }: { folders: typeof initialFolders }) {
+  return (
+    <SidebarContent className="space-y-2 p-2">
+      {folders.map((folder) => (
+        // Utilisation de Collapsible avec la classe "group" pour activer l'animation du chevron
+        <Collapsible key={folder.name} defaultOpen className="group">
+          <CollapsibleTrigger asChild>
+            {/* En-tête du dossier avec icônes dynamiques (Folder / FolderOpen) */}
+            <div className="flex items-center cursor-pointer px-2 py-2 font-semibold hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md">
+              <span className="mr-2">
+                <Folder className="h-4 w-4 group-data-[state=closed]:block hidden" />
+                <FolderOpen className="h-4 w-4 group-data-[state=open]:block hidden" />
+              </span>
+              <span className="flex-1">{folder.name}</span>
+              <ChevronRight className="inline-block ml-1 h-4 w-4 align-middle transition-transform group-data-[state=open]:rotate-90" />
+            </div>
+          </CollapsibleTrigger>
+
+          {/* Liste des endpoints contenus dans le dossier */}
+          <CollapsibleContent className="ml-4 border-l pl-2 space-y-1">
+            <SidebarMenu>
+              {folder.endpoints.map((endpoint) => (
+                <SidebarMenuItem key={endpoint.title}>
+                  <SidebarMenuButton asChild>
+                    <button className="flex items-center gap-2 text-sm">
+                      {/* Affichage du badge pour la méthode HTTP */}
+                      <MethodBadge method={endpoint.method} />
+                      <span>{endpoint.title}</span>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </CollapsibleContent>
+        </Collapsible>
+      ))}
+    </SidebarContent>
+  );
+}
+
+// ---
+// Composant UserAccountMenu : affiche les infos utilisateur avec avatar et dropdown
 function UserAccountMenu() {
   return (
     <SidebarMenu>
@@ -139,7 +150,6 @@ function UserAccountMenu() {
               <ChevronDown className="ml-auto h-4 w-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-
           <DropdownMenuContent
             align="end"
             className="w-[--radix-dropdown-menu-trigger-width]"
@@ -155,7 +165,8 @@ function UserAccountMenu() {
   );
 }
 
-/* Petit composant d'affichage d'un badge de méthode HTTP */
+// ---
+// Composant MethodBadge : affiche un badge coloré en fonction de la méthode HTTP
 function MethodBadge({ method }: { method: string }) {
   let colorClass = "";
   switch (method.toUpperCase()) {
