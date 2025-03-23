@@ -1,9 +1,11 @@
+// app/layout.tsx
 "use client";
 
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
+import { BreadcrumbProvider } from "@/contexts/BreadcrumbContext";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { TopBar } from "@/components/top-bar/top-bar";
-import { cn } from "@/lib/utils"; // helper pour concaténer des classes
+import { cn } from "@/lib/utils"; // Helper pour concaténer des classes conditionnelles
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -11,7 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="flex min-h-screen">
         <SidebarProvider>
-          <LayoutContent>{children}</LayoutContent>
+          <BreadcrumbProvider>
+            <LayoutContent>{children}</LayoutContent>
+          </BreadcrumbProvider>
         </SidebarProvider>
       </body>
     </html>
@@ -19,25 +23,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 
 /**
- * Sous-composant qui appelle useSidebar() pour
- * récupérer l'état (expanded / collapsed) et ajuster la largeur (255px / 80px).
+ * LayoutContent récupère l'état de la sidebar (expanded ou collapsed)
+ * pour ajuster la largeur de la sidebar : 255px si "expanded", 80px si "collapsed".
+ * Il contient la TopBar et le contenu principal.
  */
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { state } = useSidebar(); // "expanded" ou "collapsed"
 
   return (
     <div className="flex flex-1">
-      {/* 1. Sidebar dont la largeur varie selon l'état */}
+      {/* Sidebar avec largeur dynamique */}
       <div
         className={cn(
           "transition-all duration-300",
-          state === "expanded" ? "w-[255px]" : "w-[0px]"
+          state === "expanded" ? "w-[255px]" : "w-[80px]"
         )}
       >
         <AppSidebar />
       </div>
 
-      {/* 2. Conteneur principal : topbar + contenu */}
+      {/* Conteneur principal (TopBar + contenu) */}
       <div className="flex flex-col flex-1">
         <TopBar />
         <main className="flex-1 p-4">{children}</main>
