@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { PlusCircle, Upload, Folder, FolderOpen, ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { useBreadcrumb } from "@/contexts/BreadcrumbContext";
-import { UserAccountMenu } from "@/components/sidebar/UserAccountMenu"; // Si séparé
+import { UserAccountMenu } from "@/components/sidebar/user-account-menu"; // Si séparé
 
 // Données initiales pour la sidebar
 const initialFolders = [

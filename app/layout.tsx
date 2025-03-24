@@ -36,7 +36,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           "transition-all duration-300",
-          state === "expanded" ? "w-[255px]" : "w-[80px]"
+          state === "expanded" ? "w-[255px]" : "w-[0px]"
         )}
       >
         <AppSidebar />

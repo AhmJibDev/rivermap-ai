@@ -1,32 +1,44 @@
-// components/doc-body/doc-body.tsx
 "use client";
 
 import React from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; 
-// Par exemple, si tu utilises le composant Tabs de Shadcn
-// ou tu peux coder ta propre logique
+
+// Exemple : on utilise le composant Card de Shadcn pour illustrer deux blocs
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
 export function DocBody() {
   return (
-    <section className="p-4 flex-1 overflow-auto">
-      <Tabs defaultValue="docs" className="w-full">
-        <TabsList>
-          <TabsTrigger value="docs">Docs</TabsTrigger>
-          <TabsTrigger value="try-it">Try It</TabsTrigger>
-        </TabsList>
+    <div className="p-4 flex gap-4">
+      {/* Container1 */}
+      <Card className="flex-1">
+        <CardHeader>
+          <CardTitle>Container1</CardTitle>
+          <CardDescription>Blocs, contenu, etc.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>
+            Ici, tu peux afficher la documentation, des formulaires, ou tout autre contenu.
+          </p>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="docs" className="mt-4">
-          {/* Contenu de l’onglet Docs */}
-          <h2 className="text-lg font-bold">Get User Info by User ID</h2>
-          <p>Documentation détaillée...</p>
-        </TabsContent>
-
-        <TabsContent value="try-it" className="mt-4">
-          {/* Contenu de l’onglet Try It */}
-          <h2 className="text-lg font-bold">Tester l’endpoint</h2>
-          <p>Formulaire d’appel, paramétrage, etc.</p>
-        </TabsContent>
-      </Tabs>
-    </section>
+      {/* Container2 */}
+      <Card className="flex-1">
+        <CardHeader>
+          <CardTitle>Container2</CardTitle>
+          <CardDescription>Autre contenu, UI, etc.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>
+            Tu peux également y placer un aperçu, des logs, des résultats, etc.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
