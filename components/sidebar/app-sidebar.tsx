@@ -1,4 +1,3 @@
-// components/sidebar/app-sidebar.tsx
 "use client";
 
 import * as React from "react";
@@ -13,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { PlusCircle, Upload, Folder, FolderOpen, ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { useBreadcrumb } from "@/contexts/BreadcrumbContext";
-import { UserAccountMenu } from "@/components/sidebar/user-account-menu"; // Si séparé
+import { UserAccountMenu } from "@/components/sidebar/user-account-menu";
 
 // Données initiales pour la sidebar
 const initialFolders = [
@@ -42,11 +41,11 @@ export function AppSidebar() {
       <SidebarHeader className="flex flex-col gap-4 p-4">
         <UserAccountMenu />
         <div className="flex gap-2">
-          <Button variant="secondary" className="flex-1">
+          <Button variant="default" className="flex-1 cursor-pointer">
             <PlusCircle className="mr-2 h-4 w-4" />
             New
           </Button>
-          <Button variant="secondary" className="flex-1">
+          <Button variant="outline" className="flex-1 cursor-pointer">
             <Upload className="mr-2 h-4 w-4" />
             Import
           </Button>
@@ -61,7 +60,7 @@ export function AppSidebar() {
 }
 
 function FolderList({ folders }: { folders: typeof initialFolders }) {
-  const { setBreadcrumb } = useBreadcrumb();
+  const { setBreadcrumb, folder: activeFolder, endpoint: activeEndpoint } = useBreadcrumb();
 
   return (
     <SidebarContent className="space-y-2 p-2">
@@ -79,19 +78,28 @@ function FolderList({ folders }: { folders: typeof initialFolders }) {
           </CollapsibleTrigger>
           <CollapsibleContent className="ml-4 border-l pl-2 space-y-1">
             <SidebarMenu>
-              {folder.endpoints.map((endpoint) => (
-                <SidebarMenuItem key={endpoint.title}>
-                  <SidebarMenuButton asChild>
-                    <button
-                      onClick={() => setBreadcrumb(folder.name, endpoint.title)}
-                      className="flex items-center gap-2 text-sm"
-                    >
-                      <MethodBadge method={endpoint.method} />
-                      <span>{endpoint.title}</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {folder.endpoints.map((endpoint) => {
+                // Vérifie si cet endpoint est actif
+                const isActive =
+                  folder.name === activeFolder && endpoint.title === activeEndpoint;
+                return (
+                  <SidebarMenuItem key={endpoint.title}>
+                    <SidebarMenuButton asChild>
+                      <button
+                        onClick={() => setBreadcrumb(folder.name, endpoint.title)}
+                        className={`flex items-center gap-2 text-sm rounded-md px-2 py-1 cursor-pointer transition-colors duration-100 ${
+                          isActive
+                            ? "bg-gray-200 text-black"
+                            : "hover:bg-gray-200 hover:text-black"
+                        }`}
+                      >
+                        <MethodBadge method={endpoint.method} />
+                        <span>{endpoint.title}</span>
+                      </button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </CollapsibleContent>
         </Collapsible>
