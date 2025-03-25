@@ -65,7 +65,7 @@ function FolderList({ folders }: { folders: typeof initialFolders }) {
   return (
     <SidebarContent className="space-y-2 p-2">
       {folders.map((folder) => (
-        <Collapsible key={folder.name} defaultOpen className="group">
+        <Collapsible key={folder.name} defaultOpen={false} className="group">
           <CollapsibleTrigger asChild>
             <div className="flex items-center cursor-pointer px-2 py-2 font-semibold hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md">
               <span className="mr-2">
