@@ -45,7 +45,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       {/* Conteneur principal (TopBar + contenu) */}
       <div className="flex flex-col flex-1">
         <TopBar />
-        <main className="flex-1 p-4">{children}</main>
+        <main className="flex-1">{children}</main>
       </div>
     </div>
   );

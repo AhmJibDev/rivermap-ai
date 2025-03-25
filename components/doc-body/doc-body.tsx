@@ -1,44 +1,53 @@
 "use client";
 
 import React from "react";
-
-// Exemple : on utilise le composant Card de Shadcn pour illustrer deux blocs
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { WandSparkles, CodeXml } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function DocBody() {
-  return (
-    <div className="p-4 flex gap-4">
-      {/* Container1 */}
-      <Card className="flex-1">
-        <CardHeader>
-          <CardTitle>Container1</CardTitle>
-          <CardDescription>Blocs, contenu, etc.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>
-            Ici, tu peux afficher la documentation, des formulaires, ou tout autre contenu.
-          </p>
-        </CardContent>
-      </Card>
+  // On définit l'état activeTab avec des valeurs sémantiques
+  const [activeTab, setActiveTab] = React.useState<"assistant" | "code">("assistant");
 
-      {/* Container2 */}
-      <Card className="flex-1">
-        <CardHeader>
-          <CardTitle>Container2</CardTitle>
-          <CardDescription>Autre contenu, UI, etc.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>
-            Tu peux également y placer un aperçu, des logs, des résultats, etc.
-          </p>
-        </CardContent>
-      </Card>
+  return (
+    <div className="flex h-full w-full">
+      {/* Bloc 1 : 5% de la largeur - Barre d'onglets verticale */}
+      <div className="w-[5%] border-r border-gray-600 bg-white flex flex-col items-center gap-4 py-4">
+        {/* Bouton pour AI Assistant Mode */}
+        <Button
+          variant={activeTab === "assistant" ? "default" : "secondary"}
+          className="h-10 w-10 cursor-pointer hover:bg-gray-400 hover:text-white"
+          onClick={() => setActiveTab("assistant")}
+          title="Switch to AI Assistant Mode"
+          aria-label="Switch to AI Assistant Mode"
+        >
+          <WandSparkles className="h-6 w-6" />
+        </Button>
+
+        {/* Bouton pour Code Mode (Swagger Editor) */}
+        <Button
+          variant={activeTab === "code" ? "default" : "secondary"}
+          className="h-10 w-10 cursor-pointer hover:bg-gray-400 hover:text-white"
+          onClick={() => setActiveTab("code")}
+          title="Switch to Code Mode"
+          aria-label="Switch to Code Mode"
+        >
+          <CodeXml className="h-6 w-6" />
+        </Button>
+      </div>
+
+      {/* Bloc 2 : 45% de la largeur - Contenu dynamique en fonction de l'onglet actif */}
+      <div className="w-[45%] border-r border-gray-600 bg-gray-700 text-white flex items-center justify-center">
+        {activeTab === "assistant" ? (
+          <div className="text-xl">Contenu du bloc 2 (AI Assistant)</div>
+        ) : (
+          <div className="text-xl">Contenu du bloc 2 (Swagger Editor)</div>
+        )}
+      </div>
+
+      {/* Bloc 3 : 50% de la largeur - Zone supplémentaire */}
+      <div className="w-[50%] bg-gray-600 text-white flex items-center justify-center">
+        <span className="text-xl">Bloc 3</span>
+      </div>
     </div>
   );
 }
