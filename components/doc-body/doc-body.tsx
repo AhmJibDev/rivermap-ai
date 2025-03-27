@@ -4,6 +4,7 @@ import React from "react";
 import { WandSparkles, CodeXml } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AiAssistantPanel } from "./ai-assistant-panel";
+import { SwaggerEditor } from "@/components/doc-body/swagger-editor";
 
 export function DocBody() {
   // On définit l'état activeTab avec des valeurs sémantiques
@@ -41,7 +42,7 @@ export function DocBody() {
         {activeTab === "assistant" ? (
           <AiAssistantPanel />
         ) : (
-          <div className="text-xl">Contenu du bloc 2 (Swagger Editor)</div>
+          <SwaggerEditor />
         )}
       </div>
 
